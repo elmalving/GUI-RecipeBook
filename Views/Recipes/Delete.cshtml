@@ -1,0 +1,21 @@
+﻿@model Recipe
+@{
+    ViewData["Title"] = "Delete Recipe";
+}
+
+<div style="padding-top:2rem;">
+    <div class="delete-card">
+        <h2>Delete Recipe?</h2>
+        <p>You're about to permanently delete <strong>"@Model.Title"</strong>. This action cannot be undone.</p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.875rem;color:var(--muted);">
+            <strong style="color:var(--text);">@Model.Title</strong><br />
+            @Model.Category?.Name · @Model.TotalTimeMinutes min · @Model.Servings servings
+        </div>
+        <div class="delete-actions">
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                <button type="submit" class="btn btn-danger">Yes, delete</button>
+            </form>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline">Cancel</a>
+        </div>
+    </div>
+</div>

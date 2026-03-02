@@ -1,0 +1,107 @@
+﻿@model Recipe
+@{
+    ViewData["Title"] = "Edit - " + Model.Title;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Edit Recipe</h1>
+        <p>@Model.Title</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline">← Back</a>
+</div>
+
+<div class="form-card">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <div class="form-group">
+            <label asp-for="Title">Title *</label>
+            <input asp-for="Title" />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Short Description</label>
+            <textarea asp-for="Description" rows="2"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="CategoryId">Category *</label>
+                <select asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrepTimeMinutes">Prep (mins)</label>
+                <input asp-for="PrepTimeMinutes" type="number" min="1" />
+            </div>
+            <div class="form-group">
+                <label asp-for="CookTimeMinutes">Cook (mins)</label>
+                <input asp-for="CookTimeMinutes" type="number" min="1" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Servings">Servings</label>
+                <input asp-for="Servings" type="number" min="1" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl">Image URL</label>
+            <input asp-for="ImageUrl" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Instructions">Instructions *</label>
+            <textarea asp-for="Instructions" rows="7"></textarea>
+            <span asp-validation-for="Instructions" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Ingredients</label>
+            <div id="ingredients-container">
+                @foreach (var ing in Model.Ingredients)
+                {
+                    <div class="ingredient-row">
+                        <input type="text" name="IngredientNames" value="@ing.Name" placeholder="Ingredient name" />
+                        <input type="text" name="IngredientQuantities" value="@ing.Quantity" placeholder="Quantity" />
+                        <button type="button" class="btn-remove" onclick="removeRow(this)">✕</button>
+                    </div>
+                }
+                @if (!Model.Ingredients.Any())
+                {
+                    <div class="ingredient-row">
+                        <input type="text" name="IngredientNames" placeholder="e.g. Flour" />
+                        <input type="text" name="IngredientQuantities" placeholder="e.g. 2 cups" />
+                        <button type="button" class="btn-remove" onclick="removeRow(this)">✕</button>
+                    </div>
+                }
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:.5rem;" onclick="addIngredientRow()">+ Add ingredient</button>
+        </div>
+
+        <div style="display:flex;gap:.75rem;margin-top:1.5rem;">
+            <button type="submit" class="btn btn-primary">Update Recipe</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addIngredientRow() {
+      const container = document.getElementById('ingredients-container');
+      const row = document.createElement('div');
+      row.className = 'ingredient-row';
+      row.innerHTML = `
+        <input type="text" name="IngredientNames" placeholder="Ingredient name" />
+        <input type="text" name="IngredientQuantities" placeholder="Quantity" />
+        <button type="button" class="btn-remove" onclick="removeRow(this)">✕</button>`;
+      container.appendChild(row);
+      row.querySelector('input').focus();
+    }
+    function removeRow(btn) {
+      const rows = document.querySelectorAll('.ingredient-row');
+      if (rows.length > 1) btn.closest('.ingredient-row').remove();
+    }
+</script>

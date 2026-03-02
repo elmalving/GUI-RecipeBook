@@ -1,0 +1,67 @@
+﻿@model Recipe
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div style="margin-bottom:1.5rem;">
+    <a asp-action="Index" style="color:var(--muted);font-size:.875rem;">← Back to recipes</a>
+</div>
+
+<div class="recipe-detail">
+    <div class="recipe-detail-main">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Title" style="width:100%;border-radius:var(--radius);margin-bottom:1.5rem;max-height:360px;object-fit:cover;" />
+        }
+        <div class="detail-category">@Model.Category?.Name</div>
+        <h1 class="detail-title">@Model.Title</h1>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <p class="detail-desc">@Model.Description</p>
+        }
+
+        <h2 class="section-heading">Instructions</h2>
+        <div class="instructions-text">@Model.Instructions</div>
+
+        <div style="margin-top:2rem;display:flex;gap:.75rem;">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Recipe</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline">Delete</a>
+        </div>
+    </div>
+
+    <div class="recipe-detail-sidebar">
+        <div class="info-box">
+            <h3>At a Glance</h3>
+            <div class="info-stats">
+                <div class="info-stat">
+                    <div class="value">@Model.PrepTimeMinutes</div>
+                    <div class="label">Prep (min)</div>
+                </div>
+                <div class="info-stat">
+                    <div class="value">@Model.CookTimeMinutes</div>
+                    <div class="label">Cook (min)</div>
+                </div>
+                <div class="info-stat">
+                    <div class="value">@Model.Servings</div>
+                    <div class="label">Servings</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>Ingredients</h3>
+            <ul class="ingredients-list">
+                @foreach (var ing in Model.Ingredients)
+                {
+                    <li>
+                        <span>@ing.Name</span>
+                        @if (!string.IsNullOrEmpty(ing.Quantity))
+                        {
+                            <span class="qty">@ing.Quantity</span>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

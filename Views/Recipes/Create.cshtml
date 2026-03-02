@@ -1,0 +1,99 @@
+﻿@model Recipe
+@{
+    ViewData["Title"] = "New Recipe";
+}
+
+<div class="page-header">
+    <div>
+        <h1>New Recipe</h1>
+        <p>Add a recipe to your collection</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline">← Back</a>
+</div>
+
+<div class="form-card">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <div class="form-group">
+            <label asp-for="Title">Title *</label>
+            <input asp-for="Title" placeholder="e.g. Grandma's Apple Pie" />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Short Description</label>
+            <textarea asp-for="Description" rows="2" placeholder="One line about what makes this dish special…"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="CategoryId">Category *</label>
+                <select asp-for="CategoryId" asp-items="ViewBag.Categories">
+                    <option value="">- select -</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrepTimeMinutes">Prep Time (mins) *</label>
+                <input asp-for="PrepTimeMinutes" type="number" min="1" />
+            </div>
+            <div class="form-group">
+                <label asp-for="CookTimeMinutes">Cook Time (mins) *</label>
+                <input asp-for="CookTimeMinutes" type="number" min="1" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Servings">Servings *</label>
+                <input asp-for="Servings" type="number" min="1" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl">Image URL <span style="color:var(--muted);font-weight:normal;">(optional)</span></label>
+            <input asp-for="ImageUrl" placeholder="https://example.com/photo.jpg" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Instructions">Instructions *</label>
+            <textarea asp-for="Instructions" rows="7" placeholder="Step 1. …&#10;Step 2. …"></textarea>
+            <span asp-validation-for="Instructions" class="field-error"></span>
+        </div>
+
+        <!-- Dynamic ingredient builder -->
+        <div class="form-group">
+            <label>Ingredients</label>
+            <div id="ingredients-container">
+                <div class="ingredient-row">
+                    <input type="text" name="IngredientNames" placeholder="e.g. Flour" />
+                    <input type="text" name="IngredientQuantities" placeholder="e.g. 2 cups" />
+                    <button type="button" class="btn-remove" onclick="removeRow(this)">✕</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:.5rem;" onclick="addIngredientRow()">+ Add ingredient</button>
+        </div>
+
+        <div style="display:flex;gap:.75rem;margin-top:1.5rem;">
+            <button type="submit" class="btn btn-primary">Save Recipe</button>
+            <a asp-action="Index" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addIngredientRow() {
+      const container = document.getElementById('ingredients-container');
+      const row = document.createElement('div');
+      row.className = 'ingredient-row';
+      row.innerHTML = `
+        <input type="text" name="IngredientNames" placeholder="e.g. Butter" />
+        <input type="text" name="IngredientQuantities" placeholder="e.g. 100g" />
+        <button type="button" class="btn-remove" onclick="removeRow(this)">✕</button>`;
+      container.appendChild(row);
+      row.querySelector('input').focus();
+    }
+
+    function removeRow(btn) {
+      const rows = document.querySelectorAll('.ingredient-row');
+      if (rows.length > 1) btn.closest('.ingredient-row').remove();
+    }
+</script>
